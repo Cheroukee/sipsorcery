@@ -23,9 +23,9 @@ using SIPSorcery.Media;
 using SIPSorcery.Net;
 using SIPSorcery.SIP;
 using SIPSorcery.SIP.App;
-using SIPSorcery.SoftPhone.Signalling;
 using SIPSorceryMedia.Abstractions;
 using SIPSorceryMedia.Encoders;
+using SIPSorceryMedia.Windows;
 
 namespace SIPSorcery.SoftPhone
 {
@@ -82,30 +82,8 @@ namespace SIPSorcery.SoftPhone
         public SIPClient(SIPTransport sipTransport)
         {
             m_sipTransport = sipTransport;
-            m_sipTransport.CustomiseResponseHeader = (localSipEndpoint, remoteSipEndpoint, sipResponse) =>
-            {
-                var currentHeader = sipResponse.Header;
-                currentHeader.Contact = new System.Collections.Generic.List<SIPContactHeader>();
-                currentHeader.Contact.Add(new SIPContactHeader(String.Empty, new SIPURI(m_sipUsername, $"{localSipEndpoint.Address}:{localSipEndpoint.Port}", String.Empty)));
-                currentHeader.Server = null;
-                return currentHeader;
-            };
-            m_sipTransport.CustomiseRequestHeader = (localSipEndpoint, remoteSipEndpoint, sipRequest) =>
-            {
-                var currentHeader = sipRequest.Header;
-                currentHeader.Contact = new System.Collections.Generic.List<SIPContactHeader>();
-                currentHeader.Contact.Add(new SIPContactHeader(String.Empty, new SIPURI(m_sipUsername, $"{localSipEndpoint.Address}:{localSipEndpoint.Port}", String.Empty)));
-                currentHeader.Server = null;
-                return currentHeader;
-            };
 
-            ISIPAccount sipAccount = null;
-            if (m_sipUsername != null && m_sipPassword != null)
-            {
-                sipAccount = new BaseSIPAccount(m_sipUsername, m_sipPassword);
-            }
-
-            m_userAgent = new SIPUserAgent(m_sipTransport, null, answerSipAccount:sipAccount);
+            m_userAgent = new SIPUserAgent(m_sipTransport, null);
             m_userAgent.ClientCallTrying += CallTrying;
             m_userAgent.ClientCallRinging += CallRinging;
             m_userAgent.ClientCallAnswered += CallAnswered;
@@ -319,13 +297,15 @@ namespace SIPSorcery.SoftPhone
         /// <returns>A new media session object.</returns>
         private VoIPMediaSession CreateMediaSession()
         {
-            //var windowsAudioEndPoint = new WindowsAudioEndPoint(new AudioEncoder(), m_audioOutDeviceIndex);
-            //var windowsVideoEndPoint = new WindowsVideoEndPoint(new VpxVideoEncoder());
+            var windowsAudioEndPoint = new WindowsAudioEndPoint(new AudioEncoder(), m_audioOutDeviceIndex);
+            var windowsVideoEndPoint = new WindowsVideoEndPoint(new VpxVideoEncoder());
 
             MediaEndPoints mediaEndPoints = new MediaEndPoints
             {
-                AudioSink = new EmptyAudioSink(),
-                AudioSource = new CustomEmptyAudioSource(),
+                AudioSink = windowsAudioEndPoint,
+                AudioSource = windowsAudioEndPoint,
+                VideoSink = windowsVideoEndPoint,
+                VideoSource = windowsVideoEndPoint,
             };
 
             // Fallback video source if a Windows webcam cannot be accessed.
