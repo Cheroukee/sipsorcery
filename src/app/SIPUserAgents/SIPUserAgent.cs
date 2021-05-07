@@ -845,12 +845,12 @@ namespace SIPSorcery.SIP.App
         {
             var streamStatus = GetStreamStatusForOnHoldState();
 
-            if (MediaSession.HasAudio)
+            if (MediaSession.SupportsAudio)
             {
                 MediaSession.SetMediaStreamStatus(SDPMediaTypesEnum.audio, streamStatus);
             }
 
-            if (MediaSession.HasVideo)
+            if (MediaSession.SupportsVideo)
             {
                 MediaSession.SetMediaStreamStatus(SDPMediaTypesEnum.video, streamStatus);
             }
@@ -938,7 +938,11 @@ namespace SIPSorcery.SIP.App
             {
                 logger.LogDebug($"Re-INVITE request received {sipRequest.StatusLine}.");
 
-                UASInviteTransaction reInviteTransaction = new UASInviteTransaction(m_transport, sipRequest, m_outboundProxy);
+                //UASInviteTransaction reInviteTransaction = new UASInviteTransaction(m_transport, sipRequest, m_outboundProxy);
+                UASInviteTransaction reInviteTransaction = new UASInviteTransaction(m_transport, sipRequest, m_outboundProxy)
+                {
+                    DeliveryPending = false,
+                };
 
                 try
                 {
@@ -1664,7 +1668,7 @@ namespace SIPSorcery.SIP.App
         {
             var mediaStreamStatus = remoteSDP.GetMediaStreamStatus(SDPMediaTypesEnum.audio, 0);
 
-            if (mediaStreamStatus == MediaStreamStatusEnum.SendOnly)
+            if (mediaStreamStatus == MediaStreamStatusEnum.SendOnly || mediaStreamStatus == MediaStreamStatusEnum.Inactive)
             {
                 if (!IsOnRemoteHold)
                 {
@@ -1672,7 +1676,7 @@ namespace SIPSorcery.SIP.App
                     RemotePutOnHold?.Invoke();
                 }
             }
-            else if (mediaStreamStatus == MediaStreamStatusEnum.SendRecv && IsOnRemoteHold)
+            else if (mediaStreamStatus == MediaStreamStatusEnum.SendRecv || mediaStreamStatus == MediaStreamStatusEnum.RecvOnly)
             {
                 if (IsOnRemoteHold)
                 {
@@ -1703,10 +1707,10 @@ namespace SIPSorcery.SIP.App
             {
                 streamStatus = MediaStreamStatusEnum.SendOnly;
             }
-            else if (IsOnRemoteHold)
+            /*else if (IsOnRemoteHold)
             {
                 streamStatus = MediaStreamStatusEnum.RecvOnly;
-            }
+            }*/
 
             return streamStatus;
         }

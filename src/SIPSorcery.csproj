@@ -5,7 +5,7 @@
     <Compile Remove="net\RTSP\RTSPConnection.cs" />
     <Compile Remove="net\RTSP\RTSPServer.cs" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <None Remove="core\SIPEvents\Dialog\EventDialogSchema.xsd" />
     <None Remove="core\SIPEvents\Presence\PIDFSchema.xsd" />
@@ -84,9 +84,9 @@
 -v5.0.0: Stable release.
     </PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>5.2.2</Version>
-    <AssemblyVersion>5.2.2.0</AssemblyVersion>
-    <FileVersion>5.2.2.0</FileVersion>
+    <Version>5.2.6</Version>
+    <AssemblyVersion>5.2.6.0</AssemblyVersion>
+    <FileVersion>5.2.6.0</FileVersion>
   </PropertyGroup>
 
 </Project>

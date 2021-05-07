@@ -146,6 +146,7 @@ namespace SIPSorcery.SIP
                     {
                         //logger.LogDebug("Looking for ACK transaction, branchid=" + sipRequest.Header.Via.TopViaHeader.Branch + ".");
 
+                        //logger.LogDebug($"Received request : CallId {sipRequest.Header.CallId}, To {sipRequest.Header.To.ToTag}, From {sipRequest.Header.From.FromTag} and CSEQ : {sipRequest.Header.CSeq}");
                         foreach (var (_, transaction) in m_pendingTransactions)
                         {
                             // According to the standard an ACK should only not get matched by the branchid on the original INVITE for a non-2xx response. However
@@ -168,6 +169,7 @@ namespace SIPSorcery.SIP
                             if ((transaction.TransactionType == SIPTransactionTypesEnum.InviteClient || transaction.TransactionType == SIPTransactionTypesEnum.InviteServer)
                                 && transaction.TransactionFinalResponse != null)
                             {
+                                //logger.LogDebug($"Looking for matching transaction for ACK : CallId {transaction.TransactionRequest.Header.CallId}, To {transaction.TransactionFinalResponse.Header.To.ToTag}, From {transaction.TransactionFinalResponse.Header.From.FromTag} and CSEQ : {transaction.TransactionFinalResponse.Header.CSeq}");
                                 if (transaction.TransactionRequest.Header.CallId == sipRequest.Header.CallId &&
                                     transaction.TransactionFinalResponse.Header.To.ToTag == sipRequest.Header.To.ToTag &&
                                     transaction.TransactionFinalResponse.Header.From.FromTag == sipRequest.Header.From.FromTag &&

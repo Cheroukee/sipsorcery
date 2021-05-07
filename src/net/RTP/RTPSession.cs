@@ -298,6 +298,18 @@ namespace SIPSorcery.Net
             }
         }
 
+
+        /// <summary>
+        /// Indicates whether this session is using audio locally.
+        /// </summary>
+        public bool SupportsAudio
+        {
+            get
+            {
+                return AudioLocalTrack != null;
+            }
+        }
+
         /// <summary>
         /// Indicates whether this session is using video.
         /// </summary>
@@ -307,6 +319,18 @@ namespace SIPSorcery.Net
             {
                 return VideoLocalTrack != null && VideoLocalTrack.StreamStatus != MediaStreamStatusEnum.Inactive
                   && VideoRemoteTrack != null && VideoRemoteTrack.StreamStatus != MediaStreamStatusEnum.Inactive;
+            }
+        }
+
+
+        /// <summary>
+        /// Indicates whether this session is using video locally.
+        /// </summary>
+        public bool SupportsVideo
+        {
+            get
+            {
+                return VideoLocalTrack != null;
             }
         }
 

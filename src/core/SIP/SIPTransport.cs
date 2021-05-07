@@ -308,13 +308,13 @@ namespace SIPSorcery.SIP
         /// <param name="localEndPoint">The local end point the message was received on.</param>
         /// <param name="remoteEndPoint">The remote end point the message came from.</param>
         /// <param name="buffer">A buffer containing the received message.</param>
-        public Task ReceiveMessage(SIPChannel sipChannel, SIPEndPoint localEndPoint, SIPEndPoint remoteEndPoint, byte[] buffer)
+        public async Task ReceiveMessage(SIPChannel sipChannel, SIPEndPoint localEndPoint, SIPEndPoint remoteEndPoint, byte[] buffer)
         {
             try
             {
                 if (!m_queueIncoming)
                 {
-                    return SIPMessageReceived(sipChannel, localEndPoint, remoteEndPoint, buffer);
+                    await SIPMessageReceived(sipChannel, localEndPoint, remoteEndPoint, buffer);
                 }
                 else
                 {
@@ -331,8 +331,6 @@ namespace SIPSorcery.SIP
                     }
 
                     m_inMessageArrived.Set();
-
-                    return Task.CompletedTask;
                 }
             }
             catch (Exception excp)

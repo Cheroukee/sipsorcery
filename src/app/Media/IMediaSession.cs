@@ -46,9 +46,19 @@ namespace SIPSorcery.SIP.App
         bool HasAudio { get; }
 
         /// <summary>
+        /// Indicates whether audio is supported.
+        /// </summary>
+        bool SupportsAudio { get; }
+
+        /// <summary>
         /// Indicates whether the session supports video.
         /// </summary>
         bool HasVideo { get; }
+
+        /// <summary>
+        /// Indicates whether video is supported.
+        /// </summary>
+        bool SupportsVideo { get; }
 
         /// <summary>
         /// Indicates whether the session has been closed.
