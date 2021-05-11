@@ -647,6 +647,11 @@ namespace SIPSorcery.Net
                             AudioLocalTrack.Capabilities = SDPAudioVideoMediaFormat.GetCompatibleFormats(announcement.MediaFormats.Values.ToList(), AudioLocalTrack?.Capabilities);
                             remoteAudioRtpEP = GetAnnouncementRTPDestination(announcement, connectionAddress);
 
+                            if (announcement.Transport == )
+                            {
+
+                            }
+
                             // Check whether RTP events can be supported and adjust our parameters to match the remote party if we can.
                             SDPAudioVideoMediaFormat commonEventFormat = SDPAudioVideoMediaFormat.GetCommonRtpEventFormat(announcement.MediaFormats.Values.ToList(), AudioLocalTrack.Capabilities);
                             if (!commonEventFormat.IsEmpty())
